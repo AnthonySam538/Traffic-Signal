@@ -20,6 +20,6 @@ public class TrafficSignalMain
     System.Console.WriteLine("The traffic signal program will begin now.");
     TrafficSignalForm TrafficSignal_App = new TrafficSignalForm();
     Application.Run(TrafficSignal_App);
-    System.Console.WriteLine("The traffic signal program has ended.")
+    System.Console.WriteLine("The traffic signal program has ended.");
   }
 }

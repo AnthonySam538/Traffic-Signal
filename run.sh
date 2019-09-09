@@ -20,7 +20,7 @@ echo "Display the list of the remaining source files in the terminal using the k
 ls -l
 
 echo "Compile TrafficSignalForm.cs to create the file: TrafficSignalForm.dll"
-mcs -target:library -r:System.Windows.Forms.dll -out:TrafficSignalForm.dll TrafficSignalForm.cs
+mcs -target:library -r:System.Windows.Forms.dll -r:System.Drawing.dll -out:TrafficSignalForm.dll TrafficSignalForm.cs
 
 echo "Compile TrafficSignalMain.cs and link the previously created dll file(s) to create an executable (.exe) file."
 mcs -r:System.Windows.Forms.dll -r:TrafficSignalForm.dll -out:TrafficSignal.exe TrafficSignalMain.cs
