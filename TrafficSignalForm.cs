@@ -117,6 +117,9 @@ public class TrafficSignalForm : Form
     fastButton.CheckedChanged += new EventHandler(speedUp);
     pauseButton.Click += new EventHandler(pause);
     exitButton.Click += new EventHandler(exit);
+
+    radioButtonBox.Enabled = false;
+    pauseButton.Enabled = false;
   }
 
   // This method illustrates the screen
@@ -162,6 +165,8 @@ public class TrafficSignalForm : Form
   {
     myTimer.Interval = 4000; //Note that this will be doubled when slowButton.Checked = true;
     myTimer.Enabled = true;
+    radioButtonBox.Enabled = true;
+    pauseButton.Enabled = true;
     slowButton.Checked = true;
     topBrush.Color = Color.Red;
     Invalidate();
@@ -196,25 +201,17 @@ public class TrafficSignalForm : Form
 
   protected void pause(Object sender, EventArgs e)
   {
-    /*A note about the below if statement:
-    By default, at the beginning of the program, myTimer.Interval=100. So hitting
-    the Pause button before pressing the Start button would start the Traffic
-    Signal at myTimer.Interval=100, which is too fast. This if statement prevents
-    this problem.*/
-    if(myTimer.Interval >= 1000)
+    if(myTimer.Enabled)
     {
-      if(myTimer.Enabled)
-      {
-        myTimer.Stop();
-        pauseButton.Text = "Resume";
-        System.Console.WriteLine("You clicked on the Pause button.");
-      }
-      else
-      {
-        myTimer.Start();
-        pauseButton.Text = "Pause";
-        System.Console.WriteLine("You clicked on the Resume button.");
-      }
+      myTimer.Stop();
+      pauseButton.Text = "Resume";
+      System.Console.WriteLine("You clicked on the Pause button.");
+    }
+    else
+    {
+      myTimer.Start();
+      pauseButton.Text = "Pause";
+      System.Console.WriteLine("You clicked on the Resume button.");
     }
   }
 }
