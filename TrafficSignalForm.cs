@@ -25,9 +25,9 @@ public class TrafficSignalForm : Form
   private static Rectangle topLight;
   private static Rectangle middleLight;
   private static Rectangle bottomLight;
-  private static SolidBrush topColor = new SolidBrush(Color.DarkGray);
-  private static SolidBrush middleColor = new SolidBrush(Color.DarkGray);
-  private static SolidBrush bottomColor = new SolidBrush(Color.DarkGray);
+  private static SolidBrush topBrush = new SolidBrush(Color.DarkGray);
+  private static SolidBrush middleBrush = new SolidBrush(Color.DarkGray);
+  private static SolidBrush bottomBrush = new SolidBrush(Color.DarkGray);
 
   // Create Controls (listed from top to bottom, left to right)
   private Label title = new Label();
@@ -39,7 +39,7 @@ public class TrafficSignalForm : Form
   private Button exitButton = new Button();
 
   // Create Timer
-  private static System.Timers.Timer myTimer = new System.Timers.Timer(8000);
+  private static System.Timers.Timer myTimer = new System.Timers.Timer();
 
   // Miscellaneous stuff
   private static Size myButtonSize = new Size(85, 25);
@@ -53,12 +53,12 @@ public class TrafficSignalForm : Form
     BackColor = Color.Black;
 
     // Set up the Rectangles
-    topLight.Size = new Size(formWidth/2, formWidth/2);
-    topLight.Location = new Point(formWidth/4, formHeight/10);
+    topLight.Size = new Size(formHeight/5, formHeight/5);
+    topLight.Location = new Point(formWidth/2 - topLight.Width/2, formHeight*3/20);
     middleLight.Size = topLight.Size;
-    middleLight.Location = new Point(topLight.Left, topLight.Bottom + formHeight/10);
+    middleLight.Location = new Point(topLight.Left, topLight.Bottom + formHeight/20);
     bottomLight.Size = topLight.Size;
-    bottomLight.Location = new Point(topLight.Left, middleLight.Bottom + formHeight/10);
+    bottomLight.Location = new Point(topLight.Left, middleLight.Bottom + formHeight/20);
 
     // Set up the title label
     title.Text = "Traffic Signal by Anthony Sam";
@@ -77,7 +77,7 @@ public class TrafficSignalForm : Form
     radioButtonBox.Text = "Rate of Change";
     radioButtonBox.Size = new Size(myButtonSize.Width*2, myButtonSize.Height*2);
     radioButtonBox.Location = new Point(startButton.Right+distanceBetweenButtons, formHeight*19/20 - radioButtonBox.Height/2);
-    radioButtonBox.BackColor = startButton.BackColor;
+    radioButtonBox.BackColor = Color.DarkOrchid;
 
     slowButton.Text = "Slow";
     slowButton.Size = new Size(radioButtonBox.Width/2, myButtonSize.Height);
@@ -124,9 +124,9 @@ public class TrafficSignalForm : Form
   {
     Graphics graphics = e.Graphics;
 
-    graphics.FillEllipse(topColor, topLight);
-    graphics.FillEllipse(middleColor, middleLight);
-    graphics.FillEllipse(bottomColor, bottomLight);
+    graphics.FillEllipse(topBrush, topLight);
+    graphics.FillEllipse(middleBrush, middleLight);
+    graphics.FillEllipse(bottomBrush, bottomLight);
 
     graphics.FillRectangle(Brushes.Cyan, 0, formHeight - formHeight/10, formWidth, formHeight/10);
 
@@ -136,36 +136,36 @@ public class TrafficSignalForm : Form
 
   protected void toggleLight(Object sender, ElapsedEventArgs e)
   {
-    System.Console.WriteLine("The timer has toggled the light.");
-    if(topColor.Color != Color.DarkGray) //light is red (change to green)
+    if(topBrush.Color == Color.Red) //light is red (change to green)
     {
-      topColor.Color = Color.DarkGray;
-      bottomColor.Color = Color.Green;
-      myTimer.Interval *= 3/4;
+      topBrush.Color = Color.DarkGray;
+      bottomBrush.Color = Color.Green;
+      myTimer.Interval *= 0.75; //8s --> 6s and 4s --> 3s
     }
-    else if(middleColor.Color != Color.DarkGray) //light is yellow (change to red)
+    else if(middleBrush.Color == Color.Yellow) //light is yellow (change to red)
     {
-      topColor.Color = Color.Red;
-      middleColor.Color = Color.DarkGray;
-      myTimer.Interval *= 4;
+      topBrush.Color = Color.Red;
+      middleBrush.Color = Color.DarkGray;
+      myTimer.Interval *= 4; //2s --> 8s and 1s --> 4s
     }
     else //light is green (change to yellow)
     {
-      middleColor.Color = Color.Yellow;
-      bottomColor.Color = Color.DarkGray;
-      myTimer.Interval /= 3;
+      middleBrush.Color = Color.Yellow;
+      bottomBrush.Color = Color.DarkGray;
+      myTimer.Interval /= 3; //6s --> 2s and 3s --> 1s
     }
     Invalidate();
+    System.Console.WriteLine("The timer has toggled the light.");
   }
 
   protected void start(Object sender, EventArgs e)
   {
-    System.Console.WriteLine("You clicked on the Start button.");
-    myTimer.Interval = 8000;
+    myTimer.Interval = 4000; //Note that this will be doubled when slowButton.Checked = true;
     myTimer.Enabled = true;
     slowButton.Checked = true;
-    topColor.Color = Color.Red;
+    topBrush.Color = Color.Red;
     Invalidate();
+    System.Console.WriteLine("You clicked on the Start button.");
   }
 
   protected void exit(Object sender, EventArgs e)
@@ -176,27 +176,37 @@ public class TrafficSignalForm : Form
 
   protected void slowDown(Object sender, EventArgs e)
   {
-    myTimer.Interval /= 2;
+    // Only slow down if the slowButton is currently checked
+    if(slowButton.Checked)
+    {
+      myTimer.Interval *= 2;
+      System.Console.WriteLine("The Slow button has been checked. Slowing down...");
+    }
   }
 
   protected void speedUp(Object sender, EventArgs e)
   {
-    myTimer.Interval *= 2;
+    // Only speed up if the fastButton is currently checked
+    if(fastButton.Checked)
+    {
+      myTimer.Interval /= 2;
+      System.Console.WriteLine("The Fast button has been checked. Speeding up...");
+    }
   }
 
   protected void pause(Object sender, EventArgs e)
   {
     if(myTimer.Enabled)
     {
-      System.Console.WriteLine("You clicked on the Pause button.");
       myTimer.Stop();
       pauseButton.Text = "Resume";
+      System.Console.WriteLine("You clicked on the Pause button.");
     }
     else
     {
-      System.Console.WriteLine("You clicked on the Resume button.");
       myTimer.Start();
       pauseButton.Text = "Pause";
+      System.Console.WriteLine("You clicked on the Resume button.");
     }
   }
 }
