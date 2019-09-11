@@ -196,17 +196,25 @@ public class TrafficSignalForm : Form
 
   protected void pause(Object sender, EventArgs e)
   {
-    if(myTimer.Enabled)
+    /*A note about the below if statement:
+    By default, at the beginning of the program, myTimer.Interval=100. So hitting
+    the Pause button before pressing the Start button would start the Traffic
+    Signal at myTimer.Interval=100, which is too fast. This if statement prevents
+    this problem.*/
+    if(myTimer.Interval >= 1000)
     {
-      myTimer.Stop();
-      pauseButton.Text = "Resume";
-      System.Console.WriteLine("You clicked on the Pause button.");
-    }
-    else
-    {
-      myTimer.Start();
-      pauseButton.Text = "Pause";
-      System.Console.WriteLine("You clicked on the Resume button.");
+      if(myTimer.Enabled)
+      {
+        myTimer.Stop();
+        pauseButton.Text = "Resume";
+        System.Console.WriteLine("You clicked on the Pause button.");
+      }
+      else
+      {
+        myTimer.Start();
+        pauseButton.Text = "Pause";
+        System.Console.WriteLine("You clicked on the Resume button.");
+      }
     }
   }
 }
