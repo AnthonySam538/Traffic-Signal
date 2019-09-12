@@ -142,22 +142,27 @@ public class TrafficSignalForm : Form
     if(topBrush.Color == Color.Red) //light is red (change to green)
     {
       topBrush.Color = Color.DarkGray;
+      Invalidate(topLight);
       bottomBrush.Color = Color.Green;
+      Invalidate(bottomLight);
       myTimer.Interval *= 0.75; //8s --> 6s and 4s --> 3s
     }
     else if(middleBrush.Color == Color.Yellow) //light is yellow (change to red)
     {
-      topBrush.Color = Color.Red;
       middleBrush.Color = Color.DarkGray;
+      Invalidate(middleLight);
+      topBrush.Color = Color.Red;
+      Invalidate(topLight);
       myTimer.Interval *= 4; //2s --> 8s and 1s --> 4s
     }
     else //light is green (change to yellow)
     {
-      middleBrush.Color = Color.Yellow;
       bottomBrush.Color = Color.DarkGray;
+      Invalidate(bottomLight);
+      middleBrush.Color = Color.Yellow;
+      Invalidate(middleLight);
       myTimer.Interval /= 3; //6s --> 2s and 3s --> 1s
     }
-    Invalidate();
     System.Console.WriteLine("The timer has toggled the light.");
   }
 
