@@ -168,11 +168,12 @@ public class TrafficSignalForm : Form
 
   protected void start(Object sender, EventArgs e)
   {
-    myTimer.Interval = 4000; //Note that this will be doubled when slowButton.Checked = true;
     myTimer.Enabled = true;
     radioButtonBox.Enabled = true;
+    startButton.Enabled = false;
     pauseButton.Enabled = true;
     slowButton.Checked = true;
+    myTimer.Interval = 8000;
     topBrush.Color = Color.Red;
     Invalidate();
     System.Console.WriteLine("You clicked on the Start button.");
