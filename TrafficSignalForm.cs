@@ -163,19 +163,25 @@ public class TrafficSignalForm : Form
       Invalidate(middleLight);
       myTimer.Interval /= 3; //6s --> 2s and 3s --> 1s
     }
-    System.Console.WriteLine("The timer has toggled the light.");
+    System.Console.WriteLine("The timer has toggled the light at {0:HH:mm:ss.fff}", DateTime.Now);
   }
 
   protected void start(Object sender, EventArgs e)
   {
-    myTimer.Enabled = true;
+    // Only useful on first click really
     radioButtonBox.Enabled = true;
-    startButton.Enabled = false;
     pauseButton.Enabled = true;
+
+    // Reset the program
+    myTimer.Enabled = true;
+    pauseButton.Text = "Pause";
     slowButton.Checked = true;
     myTimer.Interval = 8000;
     topBrush.Color = Color.Red;
+    middleBrush.Color = Color.DarkGray;
+    bottomBrush.Color = Color.DarkGray;
     Invalidate();
+
     System.Console.WriteLine("You clicked on the Start button.");
   }
 
